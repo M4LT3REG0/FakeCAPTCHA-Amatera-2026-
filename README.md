@@ -2,8 +2,6 @@
 
 # 🚨 Fake CAPTCHA → Amatera Stealer (Enero 2026)
 
-[![Stars](https://img.shields.io/github/stars/[tuusuario]/FakeCAPTCHA-Amatera-2026)](https://github.com/[tuusuario]/FakeCAPTCHA-Amatera-2026)
-[![VT Detections](https://img.shields.io/badge/VT-13/72-red)](https://virustotal.com)
 
 **Análisis completo** de la campaña Blackpoint SOC: Fake CAPTCHA → App-V LOLBIN → Google Calendar C2 → PNG Steganography → Amatera Stealer.
 
