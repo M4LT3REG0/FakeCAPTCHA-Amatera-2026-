@@ -1,0 +1,1 @@
+# FakeCAPTCHA-Amatera-2026-
