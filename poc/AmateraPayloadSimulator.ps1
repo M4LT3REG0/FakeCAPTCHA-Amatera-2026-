@@ -1,4 +1,9 @@
-# 🚨 FAKE CAPTCHA → AMATERA STEALER SIMULATOR v1.0
+<#🚨 FAKE CAPTCHA → AMATERA STEALER SIMULATOR v1.0
+    POC para replicar TTPs
+    FINES EDUCATIVO/INVESTIGACIÓN
+    NO EJECUTA MALWARE REAL
+#>
+
 param([switch]$Debug, [switch]$FullChain)
 
 Write-Host "🎭 FAKE CAPTCHA → AMATERA CHAIN" -ForegroundColor Cyan
