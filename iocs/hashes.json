@@ -1,0 +1,16 @@
+{
+  "fake_captcha_family": {
+    "variants": {
+      "boom": "c64529646839be71fdfa7261cd2f3b5e6fac929d53341dd134793a7194b2d433",
+      "nim5": "25b77cacec19302d81a44fdeccf1fed9ff117aee3d7ca262a46d2c90f9aca42b",
+      "cdn_sample_bin": "7537cb0e719d9d0609eee7910542e877eae032707cbc15cfbd4c758f0040861f",
+      "bdedc647_txt": "0bcad4e8bfeebdb7b504c500db037c8930b3d69c53940002d3da395374c6f671"
+    },
+    "stages": {
+      "herf54_loader": "b61fe68f0b1bef12eed8a34769120d77579af9d3c529ac48dfe82a08eefa001b",
+      "google_calendar_ics": "64d723ead9b43a049f9c8e23c8d4ec09ffabeac2d9b079c863c89a4aab7c9a45",
+      "png_stego": "bbfc4b48676aa78b5f18b50e733837a94df744da329fe5b1b7ba6920d9e02dc3",
+      "amatera_pe": "18dad9cb91fb97a817e00fa0cd1cb9ab59f672b8ddab29f72708787f19bf6aa1"
+    }
+  }
+}
